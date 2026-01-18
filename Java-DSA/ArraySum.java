@@ -1,20 +1,17 @@
 public class ArraySum {
 
-    private static int ArraySum(int[] array) {
+    public static int sumArray(int[] arr) {
         int sum = 0;
-        for (int i = 0; i < array.length; i++) {
-            sum += array[i];
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
         }
         return sum;
     }
 
     public static void main(String[] args) {
-        int[] array = { 9, 1, 3, 4, 5, 8, 7 };
-
-        int sum = ArraySum(array);
-
-        System.out.println("Sum is:" + sum);
-
+        int arr[] = { 1, 15, 34, 78, 90 };
+        int sum = sumArray(arr);
+        System.out.println(sum);
     }
 
 }

@@ -3,9 +3,15 @@ import { useState } from "react";
 function AddExpense(props) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
+  const [error, setError] = useState("");
 
   function submitHandler(e) {
     e.preventDefault();
+
+    if(title.trim() === '' || amount.trim() === ''){
+        setError('Enter the valid title and amount')
+        return
+    }
 
     const newExpense = {
       id: Math.random(),
@@ -16,9 +22,12 @@ function AddExpense(props) {
     props.onAddExpense(newExpense);
     setTitle("");
     setAmount("");
+    setError("");
   }
 
   return (
+    <div>
+        {error && <p style={{color:'red'}}>{error}</p>}
     <form onSubmit={submitHandler}>
       <input
         type="text"
@@ -36,6 +45,7 @@ function AddExpense(props) {
 
       <button>Add Expense</button>
     </form>
+    </div>
   );
 }
 
