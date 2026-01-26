@@ -9,18 +9,43 @@ function Dashboard() {
 
   // 2. Effects
   useEffect(() => {
-    setTimeout(() => {
-      setExpenses([
-        { id: 1, title: "Food", amount: 250 },
-        { id: 2, title: "Travel", amount: 120 },
-      ]);
-      setIsLoading(false);
-    }, 1000);
+    fetch("http://localhost:5000/expenses")
+      .then((res) => res.json())
+      .then((data) => {
+        setExpenses(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching expenses:", error);
+        setIsLoading(false);
+      });
   }, []);
 
   // 3. Handlers
   function addExpenseHandler(expense) {
-    setExpenses((prevExpenses) => [expense, ...prevExpenses]);
+    fetch("http://localhost:5000/expenses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(expense),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+
+        return data;
+      })
+      .then((newExpense) => {
+        setExpenses((prevExpenses) => [newExpense, ...prevExpenses]);
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.error("Failed to add expense:", error.message);
+      });
   }
 
   // 4. Conditional UI
