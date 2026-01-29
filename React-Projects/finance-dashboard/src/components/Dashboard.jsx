@@ -7,6 +7,7 @@ function Dashboard({ token, onLogout }) {
   // 1. State
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [aiInsight, setAiInsight] = useState("");
 
   let user = null;
 
@@ -65,6 +66,20 @@ function Dashboard({ token, onLogout }) {
         alert(error.message);
         console.error("Failed to add expense:", error.message);
       });
+  }
+
+  function generateInsights() {
+    fetch("http://localhost:5000/ai/insights", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ expenses }),
+    })
+      .then((res) => res.json())
+      .then((data) => setAiInsight(data.insight))
+      .catch(() => setAiInsight("Failed to generate insights."));
   }
 
   // 4. Loading state
@@ -137,6 +152,36 @@ function Dashboard({ token, onLogout }) {
       )}
 
       <ExpenseList expenses={expenses} />
+
+      <button
+        onClick={generateInsights}
+        style={{
+          marginTop: "20px",
+          padding: "10px 16px",
+          background: "#10b981",
+          color: "#fff",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+        }}
+      >
+        Generate AI Insights
+      </button>
+
+      {aiInsight && (
+        <div
+          style={{
+            marginTop: "16px",
+            padding: "14px",
+            background: "#ecfdf5",
+            borderRadius: "6px",
+            color: "#065f46",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {aiInsight}
+        </div>
+      )}
     </div>
   );
 }

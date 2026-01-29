@@ -3,6 +3,7 @@ const cors = require("cors");
 const db = require("./db");
 const authRoutes = require("./auth");
 const authMiddleware = require("./middleware/authMiddleware");
+const aiRoutes = require("./ai");
 
 const app = express();
 const PORT = 5000;
@@ -10,11 +11,8 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
+const aiRoutes = require("./ai");
 
-/**
- * GET /expenses
- * Fetch all expenses from SQLite DB
- */
 
 app.get("/expenses", authMiddleware, (req, res) => {
   db.all("SELECT * FROM expenses ORDER BY id DESC", [], (err, rows) => {
